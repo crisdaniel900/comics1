@@ -1,0 +1,62 @@
+.post-list-component-background{
+    margin: 20px;
+    width: fit-content;
+    align-self:auto;
+    height: 80vh;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.post-list-item{
+    border: 1px solid rgb(197, 197, 197);
+    border-radius: 10px;
+    padding: 15px;
+    width: 800px;
+    height: 255px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.post-list-item:hover{
+    transition: 0.6s;
+    scale: 1.01;
+}
+
+.post-item-author{
+    margin-top: 5px;
+    gap: 5px;
+}
+
+.post-item-header{
+    margin: 15px;
+}
+
+.post-item-content{
+    margin: 15px;
+}
+
+.post-item-author{
+    display: flex;
+}
+
+.post-item-specs{
+    display: flex;
+    justify-content: space-between;
+    margin: 15px;
+}
+
+.post-item-feedback{
+    display: flex;
+    gap: 10px;
+}
+
+.post-item-feedback-container{
+    display: flex;
+}
+
+.post-item-feedback-container{
+    background-color: rgb(0, 0, 0);
+    color: white;
+    padding: 8px;
+    border-radius: 25px;
+}

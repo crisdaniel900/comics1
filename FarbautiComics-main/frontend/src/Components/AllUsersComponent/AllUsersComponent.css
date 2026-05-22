@@ -1,0 +1,177 @@
+.list-users {
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.list-users h1 {
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 28px;
+}
+
+.search-container {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #333;
+}
+
+.listusers-format-main {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1.5fr 0.8fr 1fr 1.2fr;
+  gap: 10px;
+  padding: 15px;
+  font-weight: 600;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.listusers-format-main p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.listusers-allusers {
+  width: 100%;
+}
+
+.listusers-format {
+  background-color: #fff;
+  font-weight: 400;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.3s;
+}
+
+.listusers-format:hover {
+  background-color: #f9f9f9;
+}
+
+.listusers-format p {
+  font-size: 14px;
+  color: #555;
+}
+
+.role-badge {
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  width: fit-content;
+}
+
+.role-admin {
+  background-color: #ffd700;
+  color: #333;
+}
+
+.role-user {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.listusers-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.listusers-actions a {
+  text-decoration: none;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.no-users {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+@media (max-width: 1000px) {
+  .listusers-format-main {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .listusers-format-main p:nth-child(n+4) {
+    display: none;
+  }
+
+  .listusers-format p:nth-child(n+4) {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .listusers-format-main {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .listusers-format-main p:nth-child(n+3) {
+    display: none;
+  }
+
+  .listusers-format p:nth-child(n+3) {
+    display: none;
+  }
+
+  .listusers-actions {
+    gap: 4px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,71 @@
+.user-collection{
+  width: 450px;
+  height: fit-content;
+  border: solid 0.5px rgb(224, 224, 224);
+  box-shadow: 1px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+
+}
+
+.user-collection p{
+  color: gray;
+
+}
+
+.user-collection-top{
+  display: flex;
+  gap: 20px;
+  margin-top: 10px
+}
+
+.user-collection-top-left{
+  width: fit-content;
+  height: fit-content;
+
+}
+
+.user-collection-top-left img{
+  width: 100px;
+  border-radius: 10px;
+  border: solid 0.5px rgb(228, 228, 228);
+}
+
+.user-collection-top-left img:hover{
+transform: scale(1.03);
+transition: 0.6s;
+}
+
+
+.collection-hearts{
+  display: flex;
+  gap: 5px;
+}
+
+.user-collection-options{
+  margin-top: 10px;
+}
+.view-button{
+  background-color: black;
+  color: white;
+  height: 35px;
+  width: 50px;
+  border-radius: 5px;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.remove-button{
+  background-color: white;
+  border: solid 0.5px rgb(218, 218, 218);
+  box-shadow: 1px rgba(0, 0, 0, 0.1);
+  width: 50px;
+  height: 35px;
+  font-size: 12px;
+  border-radius: 5px;
+  margin-left: 20px;
+  cursor: pointer;
+}

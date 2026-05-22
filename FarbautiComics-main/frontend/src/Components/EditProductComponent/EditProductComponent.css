@@ -1,0 +1,154 @@
+.edit-product {
+  display: flex;
+  margin: 40px;
+  margin-bottom: 50px;
+}
+
+.edit-product-image img {
+  width: 400px;
+  border-radius: 20px;
+}
+
+.edit-product-image {
+  padding-right: 150px;
+}
+
+.edit-product-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.edit-product-itemfield {
+  width: 100%;
+  font-size: 16px;
+  padding-right: 20px;
+}
+
+.edit-product-itemfield input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 45px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid #a8a7a7;
+}
+
+.edit-product-itemfield select {
+  padding: 10px;
+  width: 100%;
+  height: 50px;
+  font-size: 14px;
+  color: #7b7b7b;
+  border: 1px solid #7b7b7b8d;
+  border-radius: 10px;
+}
+
+.edit-product-other-input {
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 45px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid #a8a7a7;
+}
+
+
+.edit-product-description {
+  width: 100%;
+  font-size: 16px;
+  padding-right: 20px;
+}
+
+.edit-product-description input {
+  padding: 10px;
+  width: 100%;
+  height: 100px;
+  font-size: 14px;
+  color: #7b7b7b;
+  border: 1px solid #7b7b7b8d;
+  border-radius: 10px;
+}
+
+.edit-area {
+  width: 100%;
+  height: 10vh;
+  border: 4px dashed #979797;
+  background-image: url("https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/upload-512.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 64px 64px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  filter: alpha(opacity=50);
+  -khtml-opacity: 0.5;
+  -moz-opacity: 0.5;
+  opacity: 0.5;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.edit-area input {
+  width: 400%;
+  height: 100%;
+  margin-left: -300%;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-area input:focus {
+  outline: none;
+}
+
+.edit-area .spinner {
+  display: none;
+  margin-top: 50%;
+}
+
+.edit-area:hover,
+.edit-area.dragging,
+.edit-area.uploading {
+  filter: alpha(opacity=100);
+  -khtml-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
+
+.edit-area.uploading {
+  background: none;
+}
+
+.edit-area img {
+  width: 70px;
+  margin: auto;
+  border-radius: 10px;
+}
+
+.edit-product-btn {
+  margin-top: 20px;
+  width: 100%;
+  height: 50px;
+  border-radius: 6px;
+  background: #000000;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.product-view {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .add-product {
+    width: auto;
+    padding: 30px;
+    margin: 20px;
+  }
+}

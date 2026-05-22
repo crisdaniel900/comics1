@@ -1,0 +1,11 @@
+.slider {
+  max-width: 100%;
+}
+
+.slick-next {
+  right: 0px;
+}
+.slider-container {
+  width: 100%;
+  overflow: hidden;
+}

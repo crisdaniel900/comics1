@@ -1,0 +1,37 @@
+
+.profile-bottom{
+  width: fit-content;
+  justify-self: center;
+  margin-bottom: 30px;
+}
+
+.profile-bottom-options{
+  width: 1600px;
+  display: flex;
+  justify-content: space-between;
+  border: 0.5px solid rgb(221, 221, 221);
+  border-radius: 5px;
+  box-shadow: 1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  height: fit-content;
+}
+
+.bottom-options{
+  height: 35px;
+  width: 100%;
+  align-content: center;
+  font-family: oswald;
+  cursor: pointer;
+  border-color: transparent;
+}
+
+.bottom-options p{
+  text-align: center;
+}
+
+.profile-bottom-collections{
+  grid-template-columns: 1fr 1fr 1fr;
+  display: grid;
+  margin-bottom: 50px;
+
+}

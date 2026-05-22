@@ -1,0 +1,43 @@
+.profile-top{
+  display: flex;
+  justify-content: space-between;
+  width: 1600px;
+  justify-self: center;
+  margin-top: 25px;
+  height: fit-content;
+  border: 0.5px solid rgb(221, 221, 221);
+  border-radius: 10px;
+  box-shadow: 1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+}
+
+.profile-top-left{
+  margin-left: 50px;
+  margin-top: 15px
+}
+
+.profile-top-left p{
+  color: rgb(153, 153, 153);
+}
+
+.profile-top-right{
+  display: flex;
+  gap: 65px;
+  margin-right: 50px;
+  margin-top: 15px;
+}
+
+.profile-top-right-numbers{
+  width: fit-content;
+  height: fit-content;
+}
+
+.profile-top-right-numbers h2{
+  text-align: center;
+
+}
+
+.profile-top-right-numbers p{
+  color: rgb(153, 153, 153);
+}

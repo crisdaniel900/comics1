@@ -1,0 +1,41 @@
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.error-logo,
+.error-image {
+  margin: -70px 0;
+}
+
+.error-logo img {
+  height: 600px;
+}
+
+.error-image img {
+  height: 200px;
+}
+
+.back-button {
+  position: relative;
+  background-color: rgb(255, 255, 255);
+  border-radius: 4em;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  padding: 0.8em 1.8em;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  margin-top: 8px;
+  margin-left: 2px;
+  font-family: oswald;
+  font-weight: 500;
+}

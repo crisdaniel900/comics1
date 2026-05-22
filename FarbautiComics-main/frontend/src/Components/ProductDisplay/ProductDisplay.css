@@ -1,0 +1,267 @@
+.product-display {
+  display: column;
+}
+
+.product-display-header {
+  height: 70vh;
+  background-image: url("../../assets/product_background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  position: relative; /* Necesario para aplicar el efecto borroso en una pseudo-clase */
+  overflow: hidden;
+}
+
+/* Pseudo-clase para aplicar el efecto borroso */
+.product-display-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-repeat: inherit;
+  background-attachment: inherit;
+  filter: brightness(0.9) blur(6px); /* Aclarar y aplicar efecto borroso */
+  z-index: 1;
+}
+
+.product-display-header-img {
+  position: relative;
+  z-index: 2; /* Asegura que el contenido esté por encima del efecto borroso */
+}
+
+.product-display-header-specs {
+  position: relative;
+  z-index: 2;
+  margin-left: 230px;
+  margin-top: 130px;
+  margin-bottom: 150px;
+  padding-left: 30px;
+  padding-top: 20px;
+  border-radius: 20px;
+  
+}
+
+.product-display-header-specs h1{
+  background-color: rgb(253, 253, 253);
+  width: fit-content;
+  box-shadow:  12px 8px 0px 1px  rgb(51, 12, 12);
+  border-style: solid;
+  border-width: 4px;
+  border-color: black;
+  margin-bottom: 30px;
+  padding: 10px;
+  border-radius: 8px;
+  
+}
+
+.product-display-header-cart{
+  display: flex;
+  width: fit-content;
+  gap: 25px;
+  
+}
+
+.product-display-header-price{
+  background-color: rgb(255, 255, 255);
+  width: fit-content;
+  box-shadow:  12px 8px 0px 1px  rgb(51, 12, 12);
+  border-style: solid;
+  border-width: 4px;
+  border-color: black;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 25px;
+  
+}
+
+.product-display-header-hearts {
+  display: flex;
+  background-color: red;
+  width: 100px;
+  height: 50px;
+  color: white;
+  justify-content: center;
+  border-radius: 15px;
+  margin-top: 20px;
+  box-shadow:  12px 8px 0px 1px  rgb(51, 12, 12);
+  border-style: solid;
+  border-width: 4px;
+  border-color: black;
+}
+
+.hearts-container {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+.product-display-header-specs h1 {
+  font-size: 45px;
+  font-weight: bold;
+  font-family: oswald;
+}
+
+.product-display-header-specs h2 {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: oswald;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.product-display-header-specs p {
+  font-weight: bold;
+}
+
+.product-display-header-stars {
+  display: flex;
+  align-items: center;
+  margin-top: 13px;
+  margin-left: 10px;
+  gap: 5px;
+  color: #1c1c1c;
+  font-size: 16px;
+}
+
+.product-display-header button {
+  position: relative;
+  background-color: white;
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0.8em 1.8em;
+  cursor: pointer;
+  user-select: none;
+  cursor: pointer;
+  box-shadow:  12px 8px 0px 1px  rgb(51, 12, 12);
+  border-style: solid;
+  border-width: 4px;
+  border-color: black;
+
+}
+
+.product-display-header button:hover {
+  transition: 0.6s;
+  scale: 1.04;
+
+}
+.product-display-header button:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 10px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s;
+  box-shadow: 0 0 10px 40px white;
+}
+
+.product-display-header button:active:after {
+  box-shadow: 0 0 0 0 white;
+  position: absolute;
+  border-radius: 4em;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transition: 0s;
+}
+
+.product-display-header button:active {
+  top: 1px;
+}
+
+.product-display-header-img img {
+  width: 350px;
+  margin-left: 400px;
+  border-radius: 2%;
+  box-shadow: 6px 6px 6px rgba(66, 65, 65, 0.699);
+  margin-top: 60px;
+  position: relative;
+  z-index: 2; /* Asegura que el contenido esté por encima del efecto borroso */
+}
+
+.product-display-description {
+  height: 30vh;
+}
+
+.product-display-widgets {
+  display: flex;
+  margin-top: 25px;
+}
+
+.product-display-container {
+  display: flex;
+}
+
+.product-display-widgets-container {
+  display: flex;
+  margin-right: 15px;
+  background-color: #ffffff;
+  height: 40px;
+  width: 150px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  gap: 5px;
+  color: rgb(0, 0, 0);
+  border: solid 0.5px rgb(179, 179, 179);
+  justify-content: center;
+  padding-top: 10px;
+    box-shadow:  12px 8px 0px 1px  rgb(51, 12, 12);
+  border-style: solid;
+  border-width: 4px;
+  border-color: black;
+  margin-bottom: 20px;
+  background-color: rgb(255, 255, 111);
+
+
+  
+}
+
+.product-display-widgets-container:hover {
+  transition-duration: 0.1s;
+  background-color: #e4e4e4;
+}
+/* ── Stock display ─────────────────────────── */
+.product-display-stock {
+  display: flex;
+  align-items: center;
+  margin: 4px 0 8px;
+}
+
+.stock-available {
+  font-size: 14px;
+  color: #2f855a;
+  font-weight: 600;
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+  border-radius: 6px;
+  padding: 2px 10px;
+}
+
+.stock-unavailable {
+  font-size: 14px;
+  color: #c53030;
+  font-weight: 700;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 6px;
+  padding: 2px 10px;
+}
+
+.product-display-header-button button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #ccc;
+}

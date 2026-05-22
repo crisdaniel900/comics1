@@ -1,0 +1,92 @@
+.homebanner{
+  background-color: black;
+  height: fit-content;
+  display: flex;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  justify-content: space-around;
+  margin-bottom: 25px;
+
+}
+
+.homebanner-right{
+  width: fit-content;
+  height: fit-content;
+  margin-right: 175px;
+
+}
+
+.homebanner-right img{
+  width: 325px;
+  border-radius: 12px;
+
+}
+
+.homebanner-left{
+  margin-left: 100px;
+  color: white;
+  margin-top: 50px;
+}
+
+.homebanner-topleft{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.homebanner-topleft h1{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.homebanner-bottomleft{
+  width: 1000px;
+  margin-bottom: 25px;
+  font-size: 18px;
+  text-align: justify;
+}
+
+.homebanner-header{
+  background: red;
+  width: fit-content;
+  border-radius: 10px;
+  padding: 5px 5px 5px
+}
+
+.homebanner-hearts{
+  display: flex;
+  gap: 5px;
+}
+
+.homebanner-buttons{
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  gap: 25px;
+}
+
+.homebanner-buttons button{
+  color: white;
+  background-color: red;
+  border-color: transparent;
+  border-radius: 5px;
+  width: 200px;
+  height: 50px;
+  font-family: oswald;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.homebanner-buttons button:hover{
+  transform: scale(1.05);
+  transition: 0.6s;
+}
+
+@media(max-width: 1600px){
+  .homebanner-right img{
+  width: 275px;
+  border-radius: 12px;
+  margin-left: 15px;
+
+}
+
+}

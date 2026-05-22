@@ -1,0 +1,46 @@
+.dc-banner {
+  height: 25vh;
+  display: flex;
+  margin: auto;
+  background: linear-gradient(180deg, #5e79f0 0%, #e1ffea22 100%);
+  justify-content: space-between;
+
+
+}
+
+.dc-banner-adv{
+  width: fit-content;
+  margin-left: 50px;
+  height: fit-content;
+  align-self: flex-end;
+  box-shadow:  12px 8px 0px 1px  rgb(51, 12, 12);
+  border-style: solid;
+  border-width: 4px;
+  border-color: black;
+  background-color: rgb(239, 255, 168);
+  padding: 5px;
+  margin-bottom: 10px;
+
+}
+
+
+.dc-banner-logo{
+  width: fit-content;
+  height: fit-content;
+  align-self: center;
+}
+
+.dc-banner-logo img{
+  width: 200px;
+}
+
+.dc-banner-img{
+
+  width: fit-content;
+  height: fit-content;
+  margin-right: 50px;
+}
+
+.dc-banner-img img{
+  width: 290px;
+}

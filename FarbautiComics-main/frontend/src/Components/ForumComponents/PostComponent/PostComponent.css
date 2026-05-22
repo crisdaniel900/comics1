@@ -1,0 +1,86 @@
+.post-background{
+    background: rgb(17, 17, 17);
+    justify-items: center;
+    height: fit-content;
+}
+
+.post-form{
+    display: flex;
+}
+
+.post-headers{
+    width: fit-content;
+    height: fit-content;
+    margin: 20px;
+    align-self: center;
+}
+
+.post-headers input{
+    width: 300px;
+    height: 30px;
+    border-radius: 5px;
+    border-color: transparent;
+}
+
+.post-filters{
+
+    margin-top: 5px;
+    gap: 10px;
+
+}
+
+.post-filters select{
+    width: 150px;
+    border-radius: 5px;
+    height: 30px;
+}
+
+.post-filters{
+    display: flex;
+}
+
+.post-text{
+    padding: 20px;
+    width: fit-content;
+    display: flex;
+}
+
+
+
+.post-text textarea{
+    width:800px;
+    height: 100px;
+    border-radius: 10px
+}
+.post-text button{
+    margin: 10px;
+    height: 50px;
+    width: 100px;
+    color: black;
+    background-color: white;
+    border-color: transparent;
+    border-radius: 5px;
+    font-family: oswald;
+    align-self: center;
+    cursor: pointer;
+    font-size: 15px;
+
+}
+
+.post-text button:hover{
+    scale: 1.05;
+    transition: 0.6s;
+}
+
+.post-image{
+    width: fit-content;
+    height: fit-content;
+    align-self: center;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.post-image:hover{
+    transition: 0.6s;
+    scale: 1.06;
+}

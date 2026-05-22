@@ -1,0 +1,85 @@
+.footer-all {
+  flex-direction: column;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  background-color: rgb(17, 17, 17);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 125px;
+}
+
+.footer-logo,
+.footer-quicklinks,
+.footer-categories,
+.footer-socials {
+  margin: 10px;
+  flex: 1;
+  font-size: 15px;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-logo img{
+  width: 80px;
+}
+
+.footer-logo h1 {
+  color: white;
+  font-weight: 400;
+}
+
+.footer-quicklinks h1,
+.footer-categories h1,
+.footer-socials h1 {
+  color: white;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.footer-quicklinks a,
+.footer-categories a {
+  color: rgb(201, 201, 201);
+}
+
+.footer-quicklinks a:hover,
+.footer-categories a:hover {
+  transition-duration: 0.1s;
+  color: #ab7bf8;
+}
+
+.footer-socials {
+  margin: 0 10px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.footer-socials :hover {
+  transition-duration: 0.1s;
+  color: #ab7bf8;
+}
+
+.footer-copyright {
+  text-align: center;
+  background-color: rgb(17, 17, 17);
+}
+
+.footer-copyright p {
+  color: white;
+}
+
+@media (max-width: 1200px){
+  .footer-logo h1{
+    display: none
+
+  }
+}

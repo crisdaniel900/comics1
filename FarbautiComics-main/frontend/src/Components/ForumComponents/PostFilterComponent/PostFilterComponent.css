@@ -1,0 +1,27 @@
+.post-filter-background{
+
+    height: fit-content;
+    width: fit-content;
+    border: 1px solid rgb(206, 205, 205);
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.post-filter-searchbar{
+    margin: 10px;
+}
+
+.post-filter-searchbar input{
+    border-radius: 10px;
+    height: 25px;
+    border: 1px solid gray
+}
+
+.post-filter-types{
+    margin: 10px;
+}
+
+.post-filter-categories{
+    margin: 10px;
+}

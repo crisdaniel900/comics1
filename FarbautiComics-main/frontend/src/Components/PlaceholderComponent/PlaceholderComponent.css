@@ -1,0 +1,45 @@
+.placeholder{
+    background-color: rgb(235, 235, 235);
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+
+
+.placeholder-top{
+    justify-self: center;
+}
+
+.top-message{
+    text-align: center;
+}
+
+.placeholder-bottom{
+    justify-self: center;
+}
+
+.top-image img{
+    width: 350px;
+}
+
+.bottom-button{
+    margin-top: 10px;
+    justify-self: center;
+}
+
+.bottom-button button{
+    height: 35px;
+    width: 150px;
+    border-radius: 5px;
+    border: solid 0.5px rgb(202, 202, 202);
+    background-color: black;
+    color: white;
+    font-family: oswald;
+    margin-bottom: 10px;
+    cursor: pointer;
+    
+}
+
+.bottom-button button:hover{
+    transform: scale(1.10);
+    transition: 0.9s;
+}
