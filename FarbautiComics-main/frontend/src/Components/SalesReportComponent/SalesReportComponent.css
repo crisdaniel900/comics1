@@ -17,6 +17,13 @@
   align-items: flex-start; margin-bottom: 36px;
 }
 
+.report-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .report-title {
   font-size: 32px; font-weight: 900; color: #111;
   letter-spacing: -0.5px; margin: 0 0 6px 0;
@@ -34,6 +41,43 @@
   transition: background 0.2s; display: flex; align-items: center; gap: 6px;
 }
 .report-btn-refresh:hover { background: #333; }
+
+.report-btn-export {
+  border: 1px solid #d8d8d3;
+  background: #fff;
+  color: #111;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.report-btn-export:hover:not(:disabled) {
+  border-color: #111;
+  background: #f5f5f0;
+}
+.report-btn-export:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.report-btn-export--pdf {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+.report-btn-export--pdf:hover:not(:disabled) {
+  background: #2a2a2a;
+}
+
+.report-btn-export--excel {
+  background: #fff;
+}
 
 /* ─── Filtros ──────────────────────────────────────────────────────────── */
 .report-filters { display: flex; gap: 40px; margin-bottom: 36px; flex-wrap: wrap; }

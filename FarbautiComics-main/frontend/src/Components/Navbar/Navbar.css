@@ -38,6 +38,27 @@
   cursor: pointer;
 }
 
+.nav-action-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-action-link a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-action-link a:hover {
+  background: rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
 .link {
   text-decoration: none;
   color: #171717;

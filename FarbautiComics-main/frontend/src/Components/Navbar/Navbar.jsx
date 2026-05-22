@@ -79,6 +79,18 @@ const Navbar = () => {
         <li className='link' ><Link style={{textDecoration: 'none', color: 'black'}} to='/category/animanga'>Animanga</Link></li>
         {isUser ? <li className='link' ><Link style={{textDecoration: 'none', color: 'black'}} to='/forum'>Foro</Link></li>
         : <li className='link' ><Link style={{textDecoration: 'none', color: 'black'}} to='/register'>Foro</Link></li>}
+        {(isUser || isAdmin) && (
+          <li className='nav-action-link'>
+            <Link
+              style={{ textDecoration: 'none', color: 'black' }}
+              to='/checkout'
+              title='Carrito'
+              aria-label='Carrito'
+            >
+              <FaShoppingCart size={22} />
+            </Link>
+          </li>
+        )}
         <GiVikingShield size={50} className='ham-dropdown' onClick={dropdown_toggle}/>
         </ul>
         <div className="hamburger">
@@ -89,7 +101,6 @@ const Navbar = () => {
           {(isUser || isAdmin) && (
             <>
               <li onClick={dropdown_toggle}><Link style={{ textDecoration: 'none' }} to='/profile'><FaUser />Perfil</Link></li>
-              <li onClick={dropdown_toggle}><Link style={{ textDecoration: 'none' }} to='/checkout'><FaShoppingCart />Carrito</Link></li>
               <li onClick={dropdown_toggle}><button type="button" onClick={logoutUser} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit' }}>Salir</button></li>
             </>
           )}

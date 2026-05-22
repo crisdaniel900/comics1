@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import customFetch from '../../Utils/customFetch'
 import { toast } from 'react-toastify'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx'
 import {
   DollarSign, ShoppingCart, BookOpen, CreditCard,
   RefreshCw, Trophy, TrendingUp, TrendingDown, Minus,
-  X, FileText
+  X, FileText, Download, FileSpreadsheet
 } from 'lucide-react'
 import './SalesReportComponent.css'
 import { getImageUrl } from '../../Utils/imageUrl'
@@ -204,6 +207,155 @@ const Trend = ({ pct }) => {
   return <span className="report-trend report-trend--flat"><Minus size={12} /> 0%</span>
 }
 
+const buildSalesExportData = (report) => {
+  const summary = report.summary || {}
+  const salesByMonth = report.salesByMonth || {}
+  const salesByCategory = report.salesByCategory || {}
+  const topComics = report.topComics || []
+  const orders = report.orders || []
+
+  const monthEntries = Object.entries(salesByMonth).sort(([a], [b]) => a.localeCompare(b))
+  const categoryEntries = Object.entries(salesByCategory)
+    .sort(([, a], [, b]) => b.revenue - a.revenue)
+
+  return { summary, monthEntries, categoryEntries, topComics, orders }
+}
+
+const downloadMonthlySalesPdf = (report) => {
+  const { summary, monthEntries, categoryEntries, topComics, orders } = buildSalesExportData(report)
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' })
+  const margin = 36
+
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(20)
+  doc.text('Reporte de Ventas Mensual', margin, 38)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(11)
+  doc.text('Farbauti Comics', margin, 56)
+
+  autoTable(doc, {
+    startY: 72,
+    head: [['Resumen', 'Valor']],
+    body: [
+      ['Ingresos totales', `$${Number(summary.totalRevenue || 0).toFixed(2)}`],
+      ['Órdenes', String(summary.totalOrders || 0)],
+      ['Comics vendidos', String(summary.totalItemsSold || 0)],
+      ['Ticket promedio', `$${summary.totalOrders > 0 ? (summary.totalRevenue / summary.totalOrders).toFixed(2) : '0.00'}`],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 10, cellPadding: 6 },
+    headStyles: { fillColor: [17, 17, 17] },
+    margin: { left: margin, right: margin },
+  })
+
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY + 18,
+    head: [['Mes', 'Órdenes', 'Ingresos']],
+    body: monthEntries.length > 0
+      ? monthEntries.map(([month, value]) => [month, String(value.count), `$${value.revenue.toFixed(2)}`])
+      : [['Sin datos', '-', '-']],
+    theme: 'grid',
+    styles: { fontSize: 9, cellPadding: 5 },
+    headStyles: { fillColor: [17, 17, 17] },
+    margin: { left: margin, right: margin },
+  })
+
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY + 18,
+    head: [['Categoría', 'Órdenes', 'Ingresos']],
+    body: categoryEntries.length > 0
+      ? categoryEntries.map(([category, value]) => [category, String(value.count), `$${value.revenue.toFixed(2)}`])
+      : [['Sin datos', '-', '-']],
+    theme: 'grid',
+    styles: { fontSize: 9, cellPadding: 5 },
+    headStyles: { fillColor: [17, 17, 17] },
+    margin: { left: margin, right: margin },
+  })
+
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY + 18,
+    head: [['#', 'Comic', 'Categoría', 'Ventas', 'Ingresos']],
+    body: topComics.length > 0
+      ? topComics.map((comic, index) => [String(index + 1), comic.title, comic.category || '-', String(comic.count || 0), `$${Number(comic.revenue || 0).toFixed(2)}`])
+      : [['-', 'Sin datos', '-', '-', '-']],
+    theme: 'grid',
+    styles: { fontSize: 8, cellPadding: 5 },
+    headStyles: { fillColor: [17, 17, 17] },
+    margin: { left: margin, right: margin },
+  })
+
+  autoTable(doc, {
+    startY: doc.lastAutoTable.finalY + 18,
+    head: [['Factura', 'Cliente', 'Items', 'Estado', 'Fecha', 'Total']],
+    body: orders.length > 0
+      ? orders.slice(0, 20).map((order) => [
+          order.invoiceNumber,
+          order.userName,
+          String(order.items?.length || 0),
+          order.status,
+          new Date(order.createdAt).toLocaleDateString('es-MX'),
+          `$${Number(order.total || 0).toFixed(2)}`,
+        ])
+      : [['Sin datos', '-', '-', '-', '-', '-']],
+    theme: 'grid',
+    styles: { fontSize: 8, cellPadding: 4 },
+    headStyles: { fillColor: [17, 17, 17] },
+    margin: { left: margin, right: margin },
+  })
+
+  doc.save('reporte-ventas-mensual.pdf')
+}
+
+const downloadMonthlySalesExcel = (report) => {
+  const { summary, monthEntries, categoryEntries, topComics, orders } = buildSalesExportData(report)
+  const workbook = XLSX.utils.book_new()
+
+  const summarySheet = XLSX.utils.aoa_to_sheet([
+    ['Reporte de Ventas Mensual', 'Farbauti Comics'],
+    ['Ingresos totales', Number(summary.totalRevenue || 0)],
+    ['Órdenes', Number(summary.totalOrders || 0)],
+    ['Comics vendidos', Number(summary.totalItemsSold || 0)],
+    ['Ticket promedio', summary.totalOrders > 0 ? Number((summary.totalRevenue / summary.totalOrders).toFixed(2)) : 0],
+  ])
+
+  const monthSheet = XLSX.utils.json_to_sheet(
+    monthEntries.map(([month, value]) => ({ Mes: month, Órdenes: value.count, Ingresos: Number(value.revenue.toFixed(2)) }))
+  )
+
+  const categorySheet = XLSX.utils.json_to_sheet(
+    categoryEntries.map(([category, value]) => ({ Categoría: category, Órdenes: value.count, Ingresos: Number(value.revenue.toFixed(2)) }))
+  )
+
+  const topComicsSheet = XLSX.utils.json_to_sheet(
+    topComics.map((comic, index) => ({
+      '#': index + 1,
+      Comic: comic.title,
+      Categoría: comic.category || '',
+      Ventas: comic.count || 0,
+      Ingresos: Number((comic.revenue || 0).toFixed(2)),
+    }))
+  )
+
+  const ordersSheet = XLSX.utils.json_to_sheet(
+    orders.slice(0, 20).map((order) => ({
+      Factura: order.invoiceNumber,
+      Cliente: order.userName,
+      Items: order.items?.length || 0,
+      Estado: order.status,
+      Fecha: new Date(order.createdAt).toLocaleDateString('es-MX'),
+      Total: Number((order.total || 0).toFixed(2)),
+    }))
+  )
+
+  XLSX.utils.book_append_sheet(workbook, summarySheet, 'Resumen')
+  XLSX.utils.book_append_sheet(workbook, monthSheet, 'Mes')
+  XLSX.utils.book_append_sheet(workbook, categorySheet, 'Categorías')
+  XLSX.utils.book_append_sheet(workbook, topComicsSheet, 'Top Comics')
+  XLSX.utils.book_append_sheet(workbook, ordersSheet, 'Órdenes')
+
+  XLSX.writeFile(workbook, 'reporte-ventas-mensual.xlsx')
+}
+
 // ─── Principal ─────────────────────────────────────────────────────────────
 const SalesReportComponent = () => {
   const [report, setReport]     = useState(null)
@@ -211,6 +363,7 @@ const SalesReportComponent = () => {
   const [period, setPeriod]     = useState('month')
   const [category, setCategory] = useState('')
   const [modalId, setModalId]   = useState(null)
+  const isMonthlyReport = period === 'month'
 
   const fetchReport = async () => {
     setLoading(true)
@@ -248,6 +401,22 @@ const SalesReportComponent = () => {
   const maxCatRevenue = Math.max(...catEntries.map(([, v]) => v.revenue), 1)
   const statusLabel   = { completed: 'Completado', refunded: 'Reembolsado', pending: 'Pendiente' }
 
+  const handlePdfDownload = () => {
+    if (!isMonthlyReport) {
+      toast.info('Selecciona el período "Este mes" para descargar el reporte mensual')
+      return
+    }
+    downloadMonthlySalesPdf(report)
+  }
+
+  const handleExcelDownload = () => {
+    if (!isMonthlyReport) {
+      toast.info('Selecciona el período "Este mes" para descargar el reporte mensual')
+      return
+    }
+    downloadMonthlySalesExcel(report)
+  }
+
   return (
     <div className="report-wrapper">
 
@@ -256,10 +425,20 @@ const SalesReportComponent = () => {
           <h1 className="report-title">Reporte de Ventas</h1>
           <p className="report-subtitle">Panel de análisis de ingresos y comics vendidos</p>
         </div>
-        <button className="report-btn-refresh" onClick={fetchReport}>
-          <RefreshCw size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-          Actualizar
-        </button>
+        <div className="report-header-actions">
+          <button className="report-btn-export report-btn-export--pdf" onClick={handlePdfDownload} disabled={!isMonthlyReport}>
+            <Download size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            PDF
+          </button>
+          <button className="report-btn-export report-btn-export--excel" onClick={handleExcelDownload} disabled={!isMonthlyReport}>
+            <FileSpreadsheet size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            Excel
+          </button>
+          <button className="report-btn-refresh" onClick={fetchReport}>
+            <RefreshCw size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            Actualizar
+          </button>
+        </div>
       </div>
 
       <div className="report-filters">

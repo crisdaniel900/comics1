@@ -5,6 +5,15 @@
   padding-bottom: 15px;
   border-radius: 2%;
   border: 1px solid rgb(196, 196, 196);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item:hover,
+.item:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 1px 8px 20px 1px rgba(0, 0, 0, 0.14);
+  outline: none;
 }
 
 .item-top img {
@@ -16,6 +25,10 @@
 .item-top img:hover{
   transform: scale(1.01);
   transition: 0.2s;
+}
+
+.item:focus-visible .item-top img {
+  transform: scale(1.01);
 }
 
 .item-middle{
