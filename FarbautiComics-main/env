@@ -1,0 +1,11 @@
+NODE_ENV=development
+PORT=5100
+SUPABASE_URL=https://mqmhvcerdtsfcfsaxcab.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xbWh2Y2VyZHRzZmNmc2F4Y2FiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTMwNzE3MywiZXhwIjoyMDk0ODgzMTczfQ.-h1iw0PTjzTMvvVxB2pR70-HxUWM6Hhb-3UvKiiVQYM
+JWT_SECRET=secret
+JWT_EXPIRES_IN=1d
+
+# Opción recomendada para muchos usuarios:
+RESEND_API_KEY=re_VwjkrqhL_vz67L5x1yLHmzC8vVvEK6KEW
+RESEND_FROM=Farbauti Comics <onboarding@resend.dev>
+FRONTEND_URL=http://localhost:5173
