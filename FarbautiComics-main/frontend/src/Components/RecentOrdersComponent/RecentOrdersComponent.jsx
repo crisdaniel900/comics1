@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import customFetch from '../../Utils/customFetch'
 import { toast } from 'react-toastify'
 import { Download, Eye, X } from 'lucide-react'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import './RecentOrdersComponent.css'
 
 const RecentOrdersComponent = () => {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [canceling, setCanceling] = useState(null)
+  const [downloadingId, setDownloadingId] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -27,30 +30,113 @@ const RecentOrdersComponent = () => {
     fetchOrders()
   }, [])
 
-  // Descargar voucher como PDF
-  const handleDownloadPDF = async (orderId) => {
+  const formatCurrency = (value) => `$${Number(value || 0).toFixed(2)}`
+
+  const getStatusLabel = (status) => {
+    const statusMap = {
+      completed: 'Completado',
+      refunded: 'Cancelado',
+      pending: 'Pendiente',
+    }
+
+    return statusMap[status] || status || 'Desconocido'
+  }
+
+  // Descargar recibo como PDF
+  const handleDownloadPDF = async (order) => {
     try {
-      // Esperar a que el PDF se genere
-      const iframe = document.createElement('iframe')
-      iframe.style.display = 'none'
-      document.body.appendChild(iframe)
+      setDownloadingId(order._id)
 
-      // Redirigir al iframe a la página de factura
-      iframe.src = `/invoice/${orderId}`
-      
-      // Esperar a que cargue y luego imprimir como PDF
-      iframe.onload = () => {
-        setTimeout(() => {
-          iframe.contentWindow.print()
-        }, 500)
-      }
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' })
+      const margin = 40
+      const pageWidth = doc.internal.pageSize.getWidth()
 
-      // Alternativa: usar window.open para que el usuario guarde el PDF
-      setTimeout(() => {
-        window.open(`/invoice/${orderId}`, '_blank')
-      }, 100)
+      const purchaseDate = new Date(order.createdAt).toLocaleDateString('es-MX', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+
+      doc.setFillColor(17, 17, 17)
+      doc.rect(0, 0, pageWidth, 84, 'F')
+      doc.setTextColor(255, 255, 255)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(22)
+      doc.text('FARBAUTI COMICS', margin, 36)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(11)
+      doc.text('Recibo de compra', margin, 58)
+
+      doc.setTextColor(17, 17, 17)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Factura', margin, 118)
+      doc.setFont('helvetica', 'normal')
+      doc.text(order.invoiceNumber || 'N/D', margin, 136)
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Cliente', margin, 170)
+      doc.setFont('helvetica', 'normal')
+      doc.text(order.userName || 'N/D', margin, 188)
+      doc.text(order.userEmail || 'N/D', margin, 206)
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Estado', margin + 240, 170)
+      doc.setFont('helvetica', 'normal')
+      doc.text(getStatusLabel(order.status), margin + 240, 188)
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Fecha', margin + 240, 206)
+      doc.setFont('helvetica', 'normal')
+      doc.text(purchaseDate, margin + 240, 224)
+
+      autoTable(doc, {
+        startY: 250,
+        head: [['Comic', 'Categoría', 'Precio']],
+        body: (order.items || []).map((item) => [
+          item.title || 'Sin título',
+          item.category || '-',
+          formatCurrency(item.price),
+        ]),
+        theme: 'grid',
+        styles: { fontSize: 10, cellPadding: 6 },
+        headStyles: { fillColor: [17, 17, 17] },
+        margin: { left: margin, right: margin },
+      })
+
+      const totalsY = doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 22 : 292
+      doc.setFont('helvetica', 'bold')
+      doc.text('Subtotal', margin, totalsY)
+      doc.setFont('helvetica', 'normal')
+      doc.text(formatCurrency(order.subtotal), pageWidth - margin - 80, totalsY, { align: 'right' })
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Envío', margin, totalsY + 22)
+      doc.setFont('helvetica', 'normal')
+      doc.text('Gratis', pageWidth - margin - 80, totalsY + 22, { align: 'right' })
+
+      doc.setLineWidth(0.8)
+      doc.line(margin, totalsY + 36, pageWidth - margin, totalsY + 36)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(13)
+      doc.text('TOTAL', margin, totalsY + 58)
+      doc.text(formatCurrency(order.total), pageWidth - margin - 80, totalsY + 58, { align: 'right' })
+
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      doc.setTextColor(120, 120, 120)
+      doc.text('Gracias por tu compra en Farbauti Comics.', margin, 760)
+
+      const safeInvoice = String(order.invoiceNumber || 'recibo').replace(/[^a-zA-Z0-9-_]+/g, '_')
+      doc.save(`${safeInvoice}.pdf`)
+      toast.success('Recibo descargado en PDF')
     } catch (error) {
-      toast.error('Error al descargar voucher')
+      console.log(error)
+      toast.error('Error al descargar PDF')
+    } finally {
+      setDownloadingId(null)
     }
   }
 
@@ -151,10 +237,11 @@ const RecentOrdersComponent = () => {
                 </button>
                 <button
                   className="recent-order-btn recent-order-btn-download"
-                  title="Descargar voucher"
-                  onClick={() => handleDownloadPDF(order._id)}
+                  title="Descargar PDF"
+                  onClick={() => handleDownloadPDF(order)}
+                  disabled={downloadingId === order._id}
                 >
-                  <Download size={16} />
+                  {downloadingId === order._id ? '...' : 'PDF'}
                 </button>
                 {order.status === 'completed' && (
                   <button

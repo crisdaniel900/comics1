@@ -540,7 +540,7 @@ export const getAllUsers = async (req, res) => {
     const users = (data || []).map(user => ({
       id: user.id,
       name: user.name,
-      last_name: user.last_name,
+      last_name: user.last_name ?? user.lastname ?? null,
       username: user.username,
       email: user.email,
       address: user.address,
@@ -569,7 +569,7 @@ export const getUserById = async (req, res) => {
     const user = {
       id: data.id,
       name: data.name,
-      last_name: data.last_name,
+      last_name: data.last_name ?? data.lastname ?? null,
       username: data.username,
       email: data.email,
       address: data.address,
@@ -587,51 +587,101 @@ export const getUserById = async (req, res) => {
 export const updateUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, last_name, email, address, role, password } = req.body;
+    const { name, last_name, lastName, email, address, location, role, password } = req.body;
 
-    const payload = {};
-    if (name !== undefined) payload.name = name;
-    if (last_name !== undefined) payload.last_name = last_name;
-    if (email !== undefined) payload.email = email;
-    if (address !== undefined) payload.address = address;
-    if (role !== undefined) payload.role = role;
+    const profilePayload = {};
+    if (name !== undefined) profilePayload.name = name;
+    if (last_name !== undefined) profilePayload.last_name = last_name;
+    else if (lastName !== undefined) profilePayload.last_name = lastName;
+    if (email !== undefined) profilePayload.email = email;
+    if (address !== undefined) profilePayload.address = address;
+    else if (location !== undefined) profilePayload.address = location;
+    if (role !== undefined) profilePayload.role = role;
 
-    if (password !== undefined && password !== '') {
+    const hasProfileUpdates = Object.keys(profilePayload).length > 0;
+    const hasPasswordUpdate = password !== undefined && password !== '';
+
+    if (hasPasswordUpdate) {
       if (String(password).length < 8) {
         return res.status(StatusCodes.BAD_REQUEST).json({ msg: 'La contraseña debe tener al menos 8 caracteres' });
       }
-
-      payload.password = await hashPassword(password);
     }
 
-    if (Object.keys(payload).length === 0) {
+    if (!hasProfileUpdates && !hasPasswordUpdate) {
       return res.status(StatusCodes.BAD_REQUEST).json({ msg: 'No hay campos para actualizar' });
     }
 
-    const { data, error } = await supabase
-      .from('users')
-      .update(payload)
-      .eq('id', id)
-      .select('*')
-      .single();
-    
-    if (error) throw error;
+    let updatedUser = null;
+
+    const runUpdate = async (payload) => {
+      const { data, error } = await supabase
+        .from('users')
+        .update({
+          ...payload,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select('*')
+        .single();
+
+      if (error) throw error;
+      return data;
+    };
+
+    if (hasProfileUpdates) {
+      const profileUpdateCandidates = [];
+
+      if (profilePayload.last_name !== undefined) {
+        profileUpdateCandidates.push({ ...profilePayload, last_name: profilePayload.last_name });
+        profileUpdateCandidates.push({ ...profilePayload, lastname: profilePayload.last_name });
+      } else {
+        profileUpdateCandidates.push({ ...profilePayload });
+      }
+
+      let lastError = null;
+      for (const candidate of profileUpdateCandidates) {
+        try {
+          updatedUser = await runUpdate(candidate);
+          lastError = null;
+          break;
+        } catch (error) {
+          lastError = error;
+          const errorMessage = String(error?.message || '').toLowerCase();
+          const missingLastNameColumn = error?.code === 'PGRST204' || error?.code === '42703' || errorMessage.includes('last_name') || errorMessage.includes('lastname');
+          if (!missingLastNameColumn) {
+            throw error;
+          }
+        }
+      }
+
+      if (!updatedUser && lastError) {
+        throw lastError;
+      }
+    }
+
+    if (hasPasswordUpdate) {
+      const hashedPassword = await hashPassword(password);
+      updatedUser = await runUpdate({ password: hashedPassword });
+    }
 
     const user = {
-      id: data.id,
-      name: data.name,
-      last_name: data.last_name,
-      username: data.username,
-      email: data.email,
-      address: data.address,
-      role: data.role,
-      created_at: data.created_at,
-      updated_at: data.updated_at,
+      id: updatedUser.id,
+      name: updatedUser.name,
+      last_name: updatedUser.last_name ?? updatedUser.lastname ?? null,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      address: updatedUser.address,
+      role: updatedUser.role,
+      created_at: updatedUser.created_at,
+      updated_at: updatedUser.updated_at,
     };
     
     res.status(StatusCodes.OK).json({ msg: 'Usuario actualizado', user });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: 'Error al actualizar usuario', error: error.message });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: 'Error al actualizar usuario',
+      error: error.message,
+    });
   }
 };
 

@@ -31,7 +31,7 @@ export const mapUserRow = (row) => {
     _id: row.id,
     userModel_id: row.usermodel_id,
     name: row.name,
-    lastName: row.last_name,
+    lastName: row.last_name ?? row.lastname ?? '',
     username: row.username,
     email: row.email,
     favorites: row.favorites || [],

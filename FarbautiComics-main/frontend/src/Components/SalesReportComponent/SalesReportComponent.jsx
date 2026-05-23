@@ -110,6 +110,7 @@ const LineChart = ({ entries }) => {
 const InvoiceModal = ({ orderId, onClose }) => {
   const [order, setOrder] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [downloadingPdf, setDownloadingPdf] = useState(false)
 
   useEffect(() => {
     customFetch.get(`/orders/admin/order/${orderId}`)
@@ -126,6 +127,107 @@ const InvoiceModal = ({ orderId, onClose }) => {
 
   const statusLabel = { completed: 'Completado', refunded: 'Reembolsado', pending: 'Pendiente' }
 
+  const formatCurrency = (value) => `$${Number(value || 0).toFixed(2)}`
+
+  const handleDownloadPdf = async () => {
+    if (!order) return
+
+    try {
+      setDownloadingPdf(true)
+
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' })
+      const margin = 40
+      const pageWidth = doc.internal.pageSize.getWidth()
+
+      const purchaseDate = new Date(order.createdAt).toLocaleDateString('es-MX', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+
+      doc.setFillColor(17, 17, 17)
+      doc.rect(0, 0, pageWidth, 84, 'F')
+      doc.setTextColor(255, 255, 255)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(22)
+      doc.text('FARBAUTI COMICS', margin, 36)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(11)
+      doc.text('Factura de administrador', margin, 58)
+
+      doc.setTextColor(17, 17, 17)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Factura', margin, 118)
+      doc.setFont('helvetica', 'normal')
+      doc.text(order.invoiceNumber || 'N/D', margin, 136)
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Cliente', margin, 170)
+      doc.setFont('helvetica', 'normal')
+      doc.text(order.userName || 'N/D', margin, 188)
+      doc.text(order.userEmail || 'N/D', margin, 206)
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Estado', margin + 240, 170)
+      doc.setFont('helvetica', 'normal')
+      doc.text(statusLabel[order.status] || order.status || 'Desconocido', margin + 240, 188)
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Fecha', margin + 240, 206)
+      doc.setFont('helvetica', 'normal')
+      doc.text(purchaseDate, margin + 240, 224)
+
+      autoTable(doc, {
+        startY: 250,
+        head: [['Comic', 'Categoría', 'Precio']],
+        body: (order.items || []).map((item) => [
+          item.title || 'Sin título',
+          item.category || '-',
+          formatCurrency(item.price),
+        ]),
+        theme: 'grid',
+        styles: { fontSize: 10, cellPadding: 6 },
+        headStyles: { fillColor: [17, 17, 17] },
+        margin: { left: margin, right: margin },
+      })
+
+      const totalsY = doc.lastAutoTable?.finalY ? doc.lastAutoTable.finalY + 22 : 292
+      doc.setFont('helvetica', 'bold')
+      doc.text('Subtotal', margin, totalsY)
+      doc.setFont('helvetica', 'normal')
+      doc.text(formatCurrency(order.subtotal), pageWidth - margin - 80, totalsY, { align: 'right' })
+
+      doc.setFont('helvetica', 'bold')
+      doc.text('Envío', margin, totalsY + 22)
+      doc.setFont('helvetica', 'normal')
+      doc.text('Gratis', pageWidth - margin - 80, totalsY + 22, { align: 'right' })
+
+      doc.setLineWidth(0.8)
+      doc.line(margin, totalsY + 36, pageWidth - margin, totalsY + 36)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(13)
+      doc.text('TOTAL', margin, totalsY + 58)
+      doc.text(formatCurrency(order.total), pageWidth - margin - 80, totalsY + 58, { align: 'right' })
+
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      doc.setTextColor(120, 120, 120)
+      doc.text('Documento generado desde el panel de administración.', margin, 760)
+
+      const safeInvoice = String(order.invoiceNumber || 'factura').replace(/[^a-zA-Z0-9-_]+/g, '_')
+      doc.save(`${safeInvoice}.pdf`)
+      toast.success('PDF descargado')
+    } catch (error) {
+      console.log(error)
+      toast.error('No se pudo descargar el PDF')
+    } finally {
+      setDownloadingPdf(false)
+    }
+  }
+
   return (
     <div className="report-modal-overlay" onClick={onClose}>
       <div className="report-modal" onClick={(e) => e.stopPropagation()}>
@@ -140,9 +242,18 @@ const InvoiceModal = ({ orderId, onClose }) => {
                 <h2 className="report-modal-brand">FARBAUTI <span>COMICS</span></h2>
                 <p className="report-modal-invoice-num">{order.invoiceNumber}</p>
               </div>
-              <span className={`report-status-badge report-status-badge--${order.status}`}>
-                {statusLabel[order.status] || order.status}
-              </span>
+              <div className="report-modal-header-right">
+                <span className={`report-status-badge report-status-badge--${order.status}`}>
+                  {statusLabel[order.status] || order.status}
+                </span>
+                <button
+                  className="report-modal-download-btn"
+                  onClick={handleDownloadPdf}
+                  disabled={downloadingPdf}
+                >
+                  {downloadingPdf ? '...' : <><Download size={14} /> PDF</>}
+                </button>
+              </div>
             </div>
 
             <div className="report-modal-meta">

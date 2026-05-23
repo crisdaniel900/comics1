@@ -6,57 +6,111 @@ import { useNavigate } from 'react-router-dom'
 
 const EditUserComponent = ({ user, onUserUpdated }) => {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({
+  const [profileData, setProfileData] = useState({
     name: user.name || '',
     last_name: user.last_name || '',
     email: user.email || '',
     address: user.address || '',
     role: user.role || 'user',
+  })
+
+  const [passwordData, setPasswordData] = useState({
     password: '',
     confirmPassword: '',
   })
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSavingProfile, setIsSavingProfile] = useState(false)
+  const [isSavingPassword, setIsSavingPassword] = useState(false)
 
-  const handleInputChange = (e) => {
+  const handleProfileChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setProfileData(prev => ({
       ...prev,
       [name]: value
     }))
   }
 
-  const handleSubmit = async (e) => {
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target
+    setPasswordData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleProfileSubmit = async (e) => {
     e.preventDefault()
-    
-    if (!formData.name || !formData.email) {
+
+    if (!profileData.name || !profileData.email) {
       toast.error('Nombre y email son requeridos')
       return
     }
 
-    if (formData.password || formData.confirmPassword) {
-      if (formData.password !== formData.confirmPassword) {
-        toast.error('Las contraseñas no coinciden')
-        return
-      }
-
-      if (formData.password.length < 8) {
-        toast.error('La contraseña debe tener al menos 8 caracteres')
-        return
-      }
-    }
-
-    setIsLoading(true)
+    setIsSavingProfile(true)
     try {
-      const { confirmPassword, ...payload } = formData
+      const payload = {}
+
+      if (profileData.name !== user.name) payload.name = profileData.name
+      if ((profileData.last_name || '') !== (user.last_name || '')) payload.last_name = profileData.last_name
+      if (profileData.email !== user.email) payload.email = profileData.email
+      if ((profileData.address || '') !== (user.address || '')) payload.address = profileData.address
+      if (profileData.role !== user.role) payload.role = profileData.role
+
+      const hasChanges = Object.keys(payload).length > 0
+      if (!hasChanges) {
+        toast.info('No hay cambios para guardar')
+        return
+      }
+
       const { data } = await customFetch.patch(`/users/${user.id}`, payload)
       toast.success('Usuario actualizado correctamente')
       onUserUpdated && onUserUpdated(data.user)
       setTimeout(() => navigate('/admin/all-users'), 1000)
     } catch (error) {
-      toast.error(error?.response?.data?.msg || 'Error al actualizar el usuario')
+      toast.error(
+        error?.response?.data?.error ||
+        error?.response?.data?.msg ||
+        'Error al actualizar el usuario'
+      )
     } finally {
-      setIsLoading(false)
+      setIsSavingProfile(false)
+    }
+  }
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!passwordData.password || !passwordData.confirmPassword) {
+      toast.error('Completa ambas contraseñas')
+      return
+    }
+
+    if (passwordData.password !== passwordData.confirmPassword) {
+      toast.error('Las contraseñas no coinciden')
+      return
+    }
+
+    if (passwordData.password.length < 8) {
+      toast.error('La contraseña debe tener al menos 8 caracteres')
+      return
+    }
+
+    setIsSavingPassword(true)
+    try {
+      const { data } = await customFetch.patch(`/users/${user.id}`, {
+        password: passwordData.password,
+      })
+      toast.success(data?.msg || 'Contraseña actualizada correctamente')
+      setPasswordData({ password: '', confirmPassword: '' })
+      onUserUpdated && onUserUpdated(data.user)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error ||
+        error?.response?.data?.msg ||
+        'Error al actualizar la contraseña'
+      )
+    } finally {
+      setIsSavingPassword(false)
     }
   }
 
@@ -65,7 +119,7 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
       <div className="edit-user-form-wrapper">
         <h1>Editar Usuario</h1>
         
-        <form onSubmit={handleSubmit} className="edit-user-form">
+        <form onSubmit={handleProfileSubmit} className="edit-user-form">
           <div className="form-section">
             <h2>Información Personal</h2>
             
@@ -75,8 +129,8 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 type="text"
                 id="name"
                 name="name"
-                value={formData.name}
-                onChange={handleInputChange}
+                value={profileData.name}
+                onChange={handleProfileChange}
                 placeholder="Nombre del usuario"
                 required
               />
@@ -88,8 +142,8 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 type="text"
                 id="last_name"
                 name="last_name"
-                value={formData.last_name}
-                onChange={handleInputChange}
+                value={profileData.last_name}
+                onChange={handleProfileChange}
                 placeholder="Apellido del usuario"
               />
             </div>
@@ -100,8 +154,8 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 type="email"
                 id="email"
                 name="email"
-                value={formData.email}
-                onChange={handleInputChange}
+                value={profileData.email}
+                onChange={handleProfileChange}
                 placeholder="Email del usuario"
                 required
               />
@@ -113,8 +167,8 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 type="text"
                 id="address"
                 name="address"
-                value={formData.address}
-                onChange={handleInputChange}
+                value={profileData.address}
+                onChange={handleProfileChange}
                 placeholder="Dirección del usuario"
               />
             </div>
@@ -124,8 +178,8 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
               <select
                 id="role"
                 name="role"
-                value={formData.role}
-                onChange={handleInputChange}
+                value={profileData.role}
+                onChange={handleProfileChange}
                 className="role-select"
               >
                 <option value="user">Usuario Regular</option>
@@ -134,6 +188,26 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
             </div>
           </div>
 
+          <div className="form-actions">
+            <button
+              type="submit"
+              className="btn-save"
+              disabled={isSavingProfile}
+            >
+              {isSavingProfile ? 'Guardando...' : 'Guardar Cambios'}
+            </button>
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={() => navigate('/admin/all-users')}
+              disabled={isSavingProfile || isSavingPassword}
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+
+        <form onSubmit={handlePasswordSubmit} className="edit-user-form edit-user-form--password">
           <div className="form-section">
             <h2>Cambiar Contraseña</h2>
             <p className="password-note">Opcional. Si no se llena, la contraseña actual no cambia.</p>
@@ -144,9 +218,10 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleInputChange}
+                value={passwordData.password}
+                onChange={handlePasswordChange}
                 placeholder="Nueva contraseña"
+                autoComplete="new-password"
               />
             </div>
 
@@ -156,9 +231,10 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
                 placeholder="Repite la nueva contraseña"
+                autoComplete="new-password"
               />
             </div>
           </div>
@@ -167,15 +243,15 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
             <button 
               type="submit" 
               className="btn-save"
-              disabled={isLoading}
+              disabled={isSavingPassword}
             >
-              {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+              {isSavingPassword ? 'Guardando...' : 'Actualizar Contraseña'}
             </button>
             <button 
               type="button" 
               className="btn-cancel"
               onClick={() => navigate('/admin/all-users')}
-              disabled={isLoading}
+              disabled={isSavingProfile || isSavingPassword}
             >
               Cancelar
             </button>
