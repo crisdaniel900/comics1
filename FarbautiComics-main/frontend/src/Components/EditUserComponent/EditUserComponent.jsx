@@ -12,6 +12,8 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
     email: user.email || '',
     address: user.address || '',
     role: user.role || 'user',
+    password: '',
+    confirmPassword: '',
   })
 
   const [isLoading, setIsLoading] = useState(false)
@@ -32,9 +34,22 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
       return
     }
 
+    if (formData.password || formData.confirmPassword) {
+      if (formData.password !== formData.confirmPassword) {
+        toast.error('Las contraseñas no coinciden')
+        return
+      }
+
+      if (formData.password.length < 8) {
+        toast.error('La contraseña debe tener al menos 8 caracteres')
+        return
+      }
+    }
+
     setIsLoading(true)
     try {
-      const { data } = await customFetch.patch(`/users/${user.id}`, formData)
+      const { confirmPassword, ...payload } = formData
+      const { data } = await customFetch.patch(`/users/${user.id}`, payload)
       toast.success('Usuario actualizado correctamente')
       onUserUpdated && onUserUpdated(data.user)
       setTimeout(() => navigate('/admin/all-users'), 1000)
@@ -116,6 +131,35 @@ const EditUserComponent = ({ user, onUserUpdated }) => {
                 <option value="user">Usuario Regular</option>
                 <option value="admin">Administrador</option>
               </select>
+            </div>
+          </div>
+
+          <div className="form-section">
+            <h2>Cambiar Contraseña</h2>
+            <p className="password-note">Opcional. Si no se llena, la contraseña actual no cambia.</p>
+
+            <div className="form-group">
+              <label htmlFor="password">Nueva Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Nueva contraseña"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Confirmar Nueva Contraseña</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="Repite la nueva contraseña"
+              />
             </div>
           </div>
 

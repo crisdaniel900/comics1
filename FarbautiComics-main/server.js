@@ -12,6 +12,7 @@ import authRouter from './Routes/authRouter.js';
 import userRouter from './Routes/userRouter.js';
 import postRouter from './Routes/postRouter.js';
 import orderRouter from './Routes/orderRouter.js';
+import securityRouter from './Routes/securityRouter.js';
 import errorHandlerMiddleware from './Middleware/errorHandlerMiddleware.js';
 import { authenticateUser } from './Middleware/authMiddleware.js';
 
@@ -35,6 +36,7 @@ app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/post', postRouter);
 app.use('/api/v1/orders', authenticateUser, orderRouter);
+app.use('/api/v1/security', securityRouter);
 
 app.use('*', (req, res) => {
   res.status(404).json({ msg: 'not found' });

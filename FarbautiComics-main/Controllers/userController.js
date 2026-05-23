@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { registerInteraction } from "../Utils/Interactions.js";
 import { supabase } from '../Utils/supabaseClient.js';
 import { mapProductRow, mapUserRow } from '../Utils/dbMappers.js';
+import { hashPassword } from '../Utils/passwordUtils.js';
 
 const EMPTY_TITLE = '__no_recommendation__';
 
@@ -586,7 +587,7 @@ export const getUserById = async (req, res) => {
 export const updateUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, last_name, email, address, role } = req.body;
+    const { name, last_name, email, address, role, password } = req.body;
 
     const payload = {};
     if (name !== undefined) payload.name = name;
@@ -594,6 +595,14 @@ export const updateUserById = async (req, res) => {
     if (email !== undefined) payload.email = email;
     if (address !== undefined) payload.address = address;
     if (role !== undefined) payload.role = role;
+
+    if (password !== undefined && password !== '') {
+      if (String(password).length < 8) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ msg: 'La contraseña debe tener al menos 8 caracteres' });
+      }
+
+      payload.password = await hashPassword(password);
+    }
 
     if (Object.keys(payload).length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({ msg: 'No hay campos para actualizar' });

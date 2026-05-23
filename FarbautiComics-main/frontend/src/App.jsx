@@ -6,12 +6,12 @@ import {
   ProductPage,
   ShopCategoryPage,
   Login,
-  ForgotPassword,
-  ResetPassword,
+  ForgotPasswordOptionsPage,
   Register,
   CheckOutPage,
   ErrorPage,
   ProfilePage,
+  ChangePasswordPage,
   AdminLayout,
   AddProduct,
   EditProduct,
@@ -31,8 +31,6 @@ import { Animanga } from './Components/Banners/Animanga/Animanga'
 
 import { action as registerAction } from './Components/RegisterComponents/RegisterComponent'
 import { action as loginAction } from './Components/LoginComponent/LoginComponent'
-import { action as forgotPasswordAction } from './Components/ForgotPasswordComponent/ForgotPasswordComponent'
-import { action as resetPasswordAction } from './Components/ResetPasswordComponent/ResetPasswordComponent'
 import { loader as Profileloader } from './Components/ProfilePageComponent/ProfilePageComponent'
 import { action as addproductAction } from './Components/AddProductComponent/AddProductComponent'
 import { loader as adminLoader } from './Components/SideBar/SideBar'
@@ -62,14 +60,8 @@ const router = createBrowserRouter([
         action: loginAction
       },
       {
-        path: "forgot-password",
-        element: <ForgotPassword />,
-        action: forgotPasswordAction
-      },
-      {
-        path: "reset-password",
-        element: <ResetPassword />,
-        action: resetPasswordAction
+        path: "forgot-password-options",
+        element: <ForgotPasswordOptionsPage />
       },
       {
         path: "profile",
@@ -80,6 +72,10 @@ const router = createBrowserRouter([
             path: "settings",
             element: <UserSettings />
           },
+          {
+            path: "change-password",
+            element: <ChangePasswordPage />
+          }
         ]
       },
       {

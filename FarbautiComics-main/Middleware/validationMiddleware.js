@@ -145,17 +145,6 @@ export const validateIdParam = withValidationErrors([
     body('password').notEmpty().withMessage('password is required')
   ])
 
-  export const validatePasswordResetRequestInput = withValidationErrors([
-    body('email').notEmpty().withMessage('email is required').isEmail()
-      .withMessage('invalid email format')
-  ])
-
-  export const validatePasswordResetInput = withValidationErrors([
-    body('token').notEmpty().withMessage('token is required'),
-    body('password').notEmpty().withMessage('password is required')
-      .isLength({ min: 8 }).withMessage('password must be at least 8 characters long')
-  ])
-
   export const validateUpdateUserInput = withValidationErrors([
     body('name').notEmpty().withMessage('name is required'),
     body('email').notEmpty().withMessage('email is required').isEmail()

@@ -1,7 +1,6 @@
 export { default as HomeLayout } from './HomeLayout';
 export { default as Login } from './Login';
-export { default as ForgotPassword } from './ForgotPassword';
-export { default as ResetPassword } from './ResetPassword';
+export { default as ForgotPasswordOptionsPage } from './ForgotPasswordOptionsPage';
 export { default as ProductPage } from './ProductPage';
 export { default as Register } from './Register';
 export { default as ShopCategoryPage } from './ShopCategoryPage';
@@ -14,6 +13,7 @@ export { default as EditProduct } from './EditProduct';
 export { default as AllProduct } from './AllProduct';
 export { default as HomePage } from './HomePage';
 export { default as UserSettings } from './UserSettings';
+export { default as ChangePasswordPage } from './ChangePasswordPage';
 export { default as ForumPage } from './ForumPage';
 export { default as PostPage } from './PostPage';
 // ── Nuevas páginas ────────────────────────────────────────────────────

@@ -34,6 +34,13 @@
   border-bottom: 2px solid #f0f0f0;
 }
 
+.password-note {
+  margin-top: -10px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #666;
+}
+
 .form-group {
   margin-bottom: 20px;
 }

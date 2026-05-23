@@ -37,7 +37,7 @@ const LoginComponent = () => {
                     {isSubmitting ? 'Iniciando Sesion...' : 'Iniciar Sesion'}
                 </button>
                 <p className="loginsignup-login">
-                  <Link to='/forgot-password'>Olvidé mi contraseña</Link>
+                  <Link to='/forgot-password-options'>Olvidé mi contraseña</Link>
                 </p>
                 <p className="loginsignup-login">Aun no tienes una cuenta? <Link to='/register'>Registrate aqui</Link></p>
             </Form>
